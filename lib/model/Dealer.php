@@ -4,8 +4,8 @@ class Dealer extends VehicleBaseModel{
 
 
   public function setup(){
-    $this->define("brand", "ForeignKey", array('target_model'=>'Brand', 'required'=>true) );
-    $this->define("client_id", "IntegerField", array('maxlength'=>255) );
+    $this->define("brand", "ForeignKey", array('target_model'=>'Brand', 'required'=>true, 'scaffold'=>true) );
+    $this->define("client_id", "IntegerField", array('maxlength'=>255, 'scaffold'=>true) );
 
     parent::setup();
 
@@ -20,11 +20,10 @@ class Dealer extends VehicleBaseModel{
     $this->define("email", "CharField", array('maxlength'=>255, 'group'=>'contact') );
     $this->define("opening_times", "TextField", array('widget'=>"TinymceTextareaInput", 'group'=>'contact'));
 
-    $this->define("active", "BooleanField", array('group'=>'status'));
+    $this->columns['status'][1]['group'] = 'status';
     $this->define("sales", "BooleanField", array('maxlength'=>2,'group'=>'status') );
     $this->define("service", "BooleanField", array('maxlength'=>2,'group'=>'status') );
     $this->define("parts", "BooleanField", array('maxlength'=>2,'group'=>'status') );
-    $this->define("specialism","CharField", array('group'=>'status'));
 
     $this->define("lat", "CharField", array('editable'=>false));
     $this->define("lng", "CharField", array('editable'=>false));

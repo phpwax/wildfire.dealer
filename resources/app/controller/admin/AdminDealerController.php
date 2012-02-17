@@ -5,5 +5,8 @@ class AdminDealerController extends AdminComponent{
   public $display_name = "Dealers";
   public $dashboard = false;
   public $tree_layout = false;
+    public $filter_fields=array(
+                            'text' => array('columns'=>array('title', 'client_id', 'postal_code'), 'partial'=>'_filters_text', 'fuzzy'=>true)
+                          );
 }
 ?>
