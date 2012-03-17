@@ -5,7 +5,7 @@ class Dealer extends VehicleBaseModel{
 
   public function setup(){
     $this->define("brand", "ForeignKey", array('target_model'=>'Brand', 'required'=>true, 'scaffold'=>true) );
-    $this->define("client_id", "IntegerField", array('maxlength'=>255, 'scaffold'=>true) );
+    $this->define("client_id", "CharField", array('scaffold'=>true) );
 
     parent::setup();
 
@@ -29,7 +29,8 @@ class Dealer extends VehicleBaseModel{
     $this->define("lng", "CharField", array('editable'=>false));
     $this->define("website", "CharField", array('editable'=>false));
     $this->define("api_status", "BooleanField", array('editable'=>false));
-
+  
+    if(constant("CONTENT_MODEL")) $this->define("pages", "ManyToManyField", array('target_model'=>CONTENT_MODEL, 'group'=>'relationships'));
   }
 
 
