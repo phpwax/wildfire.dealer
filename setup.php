@@ -6,4 +6,9 @@ if(!defined("CONTENT_MODEL")){
   define("CONTENT_MODEL", $con->cms_content_class);
 }
 
+WaxEvent::add(CONTENT_MODEL.".setup", function(){
+  $model = WaxEvent::data();
+  if(!$model->columns['dealers']) $model->define("dealers", "ManyToManyField", array('target_model'=>'Dealer', 'group'=>'relationships'));
+});
+
 ?>
