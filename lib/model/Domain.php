@@ -2,9 +2,9 @@
 class Domain extends WaxModel{
 
   public function setup(){
-    $this->define("webaddress", "CharField");
-    $this->define("status", "BooleanField", array('label'=>'Live'));
-    $this->define("dealers", "ManyToManyField", array('target_model'=>'Dealer'));
+    $this->define("webaddress", "CharField", array('scaffold'=>true));
+    $this->define("status", "BooleanField", array('label'=>'Live','scaffold'=>true));
+    $this->define("dealers", "ManyToManyField", array('target_model'=>'Dealer','scaffold'=>true));
   }
 
   public function before_save(){
