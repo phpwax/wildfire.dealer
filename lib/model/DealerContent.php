@@ -35,6 +35,18 @@ class DealerContent extends WildfireContent{
 		$this->define("children", "ChildContent", array("target_model" => get_class($this), "join_field" => $this->parent_join_field));
 	}
 
+  public function before_save(){
+    parent::before_save();
+    if($this->postcode && !$this->lat) $this->coords();
+  }
+
+  public function coords(){
+     $coords = geo_locate($this->postcode, Config::get("map_key"));
+     $this->lat = $coords['lat'];
+     $this->lng = $coords['lng'];
+    return $this;
+  }
+
   public function css_selector(){
     if($this->model) return $this->model->css_selector();
     return str_replace("/", "-", trim($this->permalink, "/"));
