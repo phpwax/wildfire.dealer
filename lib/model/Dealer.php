@@ -10,7 +10,7 @@ class Dealer extends VehicleBaseModel{
 
     parent::setup();
 
-    $this->define("address_line_1", "CharField", array('maxlength'=>255, 'required'=>true, 'group'=>'contact') );
+    $this->define("address_line_1", "CharField", array('maxlength'=>255, 'group'=>'contact') );
     $this->define("address_line_2", "CharField", array('maxlength'=>255, 'group'=>'contact') );
     $this->define("address_line_3", "CharField", array('maxlength'=>255, 'group'=>'contact') );
     $this->define("city", "CharField", array('maxlength'=>255, 'group'=>'contact') );
@@ -39,10 +39,10 @@ class Dealer extends VehicleBaseModel{
     $this->define("create_site", "BooleanField", array('group'=>'advanced'));
   }
 
-  public function after_save(){
-    parent::after_save();
-    if($this->create_user) $this->dealer_creation();
-    if($this->create_site) $this->user_creation();
+  public function before_save(){
+    parent::before_save();
+    if($this->create_site) $this->dealer_creation();
+    if($this->create_user) $this->user_creation();
   }
 
   //make a new cms user for the dealership
