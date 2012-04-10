@@ -20,7 +20,7 @@ class ChildContent extends HasManyField {
       $kid_ids = array(0);
       foreach($kids->rowset as $pg) $kid_ids[] = $pg['id'];
       $ids = array_merge((array)$data->rowset, (array)$kid_ids);
-      $class = get_class($national);
+      $class = get_class($this->model);
       $model = new $class("live");
       return $model->filter("id", $ids)->all();
     }
