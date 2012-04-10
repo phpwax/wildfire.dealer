@@ -122,7 +122,7 @@ class Dealer extends VehicleBaseModel{
           //copy the national main pages
           $i=0;
           foreach(array('/vehicles/', '/news/', '/offers/') as $skel){
-            $look = new MGContent("live");
+            $look = new $class("live");
             if($found = $look->filter("permalink", $skel)->first()){
               $info = $found->row;
               unset($info['id'], $info['permalink']);
@@ -135,7 +135,7 @@ class Dealer extends VehicleBaseModel{
             }
           }
           //add in the contact page
-          $contact = new MGContent;
+          $contact = new $class;
           $contact_details = array('title'=>'Contact Us', 'parent_id'=>$saved->primval, 'map'=>'large','page_type'=>self::$dealer_contactpage_partial, 'sort'=>$i, 'date_start'=>date("Y-m-d", strtotime("now-1 day")));
           $contact->update_attributes($contact_details)->generate_permalink()->map_live()->children_move()->show()->save();
         }
