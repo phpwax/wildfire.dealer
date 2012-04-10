@@ -4,11 +4,6 @@ class DealerContent extends WildfireContent{
   public static $page_types = array('test');
   public function setup(){
     parent::setup();
-    $this->define("excerpt", "TextField");
-    unset($this->columns['view']);
-
-    $this->columns['media'][1]['target_model'] = "MGMedia";
-
     $this->define("brand", "ForeignKey", array('target_model'=>'Brand', 'group'=>'relationships'));
     $this->define("model", "ForeignKey", array('target_model'=>'Model', 'group'=>'relationships'));
     $this->define("derivative", "ForeignKey", array('target_model'=>'Derivative', 'group'=>'relationships'));
