@@ -20,6 +20,7 @@ class TestDriveRequest extends WaxModel{
     $this->define("utm_source", "CharField", array('widget'=>'HiddenInput'));
     $this->define("utm_campaign", "CharField", array('widget'=>'HiddenInput'));
     $this->define("utm_medium", "CharField", array('widget'=>'HiddenInput'));
+    parent::setup();
   }
 }
 ?>
