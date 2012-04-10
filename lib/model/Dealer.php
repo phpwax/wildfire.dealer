@@ -1,8 +1,9 @@
 <?
 
 class Dealer extends VehicleBaseModel{
-
-
+  public static $allowed_modules = array('home'=>array('index'=>array()),'content'=>array('index'=>array(), 'edit'=>array('details', 'media', 'google map')));
+  public static $dealer_homepage_partial = "__dealer_home";
+  public static $dealer_contactpage_partial = "__dealer_contact";
   public function setup(){
     $this->define("brand", "ForeignKey", array('target_model'=>'Brand', 'required'=>true, 'scaffold'=>true) );
     $this->define("client_id", "CharField", array('scaffold'=>true) );
@@ -18,7 +19,9 @@ class Dealer extends VehicleBaseModel{
     $this->define("telephone", "CharField", array('maxlength'=>255, 'group'=>'contact') );
     $this->define("fax", "CharField", array('maxlength'=>255, 'group'=>'contact') );
     $this->define("email", "CharField", array('maxlength'=>255, 'group'=>'contact') );
-    $this->define("opening_times", "TextField", array('widget'=>"TinymceTextareaInput", 'group'=>'contact'));
+    $this->define("opening_times", "TextField", array('widget'=>"TinymceTextareaInput", 'group'=>'contact', 'label'=>'Sales opening times'));
+    $this->define("service_opening_times", "TextField", array('widget'=>"TinymceTextareaInput", 'group'=>'contact'));
+    $this->define("parts_opening_times", "TextField", array('widget'=>"TinymceTextareaInput", 'group'=>'contact'));
 
     $this->columns['status'][1]['group'] = 'status';
     $this->define("sales", "BooleanField", array('maxlength'=>2,'group'=>'status') );
@@ -32,8 +35,115 @@ class Dealer extends VehicleBaseModel{
     $this->define("domains", "ManyToManyField", array('target_model'=>'Domain', 'group'=>'relationships'));
 
     if(constant("CONTENT_MODEL")) $this->define("pages", "ManyToManyField", array('target_model'=>CONTENT_MODEL, 'group'=>'relationships'));
+    $this->define("create_user", "BooleanField", array('group'=>'advanced'));
+    $this->define("create_site", "BooleanField", array('group'=>'advanced'));
   }
 
+  public function after_save(){
+    parent::after_save();
+    if($this->create_user) $this->dealer_creation();
+    if($this->create_site) $this->user_creation();
+  }
+
+  //make a new cms user for the dealership
+  public function user_creation(){
+    $user = new WildfireUser;
+    if($this->client_id && (!$found = $user->filter("username", $this->client_id)->first())){
+      $user_attrs = array('username'=>$this->client_id, 'firstname'=>$this->title, 'password'=>$this->client_id.date("Y"));
+      $user = $user->update_attributes($user_attrs);
+
+      $allowed_modules = self::$allowed_modules;
+      foreach(CMSApplication::get_modules() as $name=>$info){
+        //if the module isnt listed at all, then block access to it
+        if(!$allowed_modules[$name]){
+          $block = new WildfirePermissionBlacklist;
+          $block->update_attributes(array($user->table."_id"=>$user->primval, 'class'=>$name, 'operation'=>"index"));
+        }else{
+
+          $class = "Admin".Inflections::camelize($name,true)."Controller";
+          $obj = new $class(false, false);
+          $operations = array_merge($obj->operation_actions, array('index'));
+          $mods = $allowed_modules[$name];
+          $section_class = $obj->model_class;
+          $section_model = new $section_class;
+          //find all possible tabs for the model
+          $tabs = array('details');
+          foreach($section_model->columns as $col=>$info) if($info[1]['group']) $tabs[] = strtolower($info[1]['group']);
+          $tabs = array_unique($tabs);
+
+          //block operations or tabs
+          foreach($operations as $op){
+            //if its not set, block it
+            if(!isset($mods[$op])){
+              $block = new WildfirePermissionBlacklist;
+              $block->update_attributes(array($user->table."_id"=>$user->primval, 'class'=>$name, 'operation'=>$op));
+            }else{
+              //if it is, block tabs that havent been listed
+              foreach($tabs as $tab){
+                if(!in_array($tab, $mods[$op])){
+                  $block = new WildfirePermissionBlacklist;
+                  $block->update_attributes(array($user->table."_id"=>$user->primval, 'class'=>$name, 'operation'=>"tab-".$tab));
+                }
+              }
+            }
+          }
+        }
+
+      }
+    }
+  }
+
+  //create the dealer section in the cms
+  public function dealer_creation(){
+    $class = CONTENT_MODEL;
+    $model = new $class("live");
+    $url = "/dealers/".Inflections::to_url($this->title)."/";
+    if(($pages = $this->pages) && $pages->count() || $model->filter("permalink", $url)->first()) return true;
+    else{
+      //find dealers section
+
+      if($dealers = $model->filter("permalink", "/dealers/")->first()){
+        $model = $model->clear();
+        //create the first level of this dealer
+        $dealer_data = array(
+          'title'=>$this->title,
+          'layout'=>'dealer',
+          'page_type'=>self::$dealer_homepage_partial,
+          'content'=>$this->content,
+          'parent_id'=>$dealers->primval
+        );
+        //create the dealer skel
+        if($saved = $model->update_attributes($dealer_data)){
+
+          $saved = $saved->generate_permalink()->map_live()->children_move()->show()->save();
+          $saved->dealers = $this;
+          $this->pages = $saved;
+          $subs = array();
+          //copy the national main pages
+          $i=0;
+          foreach(array('/vehicles/', '/news/', '/offers/') as $skel){
+            $look = new MGContent("live");
+            if($found = $look->filter("permalink", $skel)->first()){
+              $info = $found->row;
+              unset($info['id'], $info['permalink']);
+              $info['parent_id'] = $saved->primval;
+              $info['sort'] = $i;
+              $info['title'] = str_replace("Latest ", "", $info['title']);
+              $info['dealer_content_id'] = $found->primval;
+              $subs[] = $look->update_attributes($info)->generate_permalink()->map_live()->children_move()->show()->save();
+              $i++;
+            }
+          }
+          //add in the contact page
+          $contact = new MGContent;
+          $contact_details = array('title'=>'Contact Us', 'parent_id'=>$saved->primval, 'map'=>'large','page_type'=>self::$dealer_contactpage_partial, 'sort'=>$i, 'date_start'=>date("Y-m-d", strtotime("now-1 day")));
+          $contact->update_attributes($contact_details)->generate_permalink()->map_live()->children_move()->show()->save();
+        }
+
+      }
+    }
+    return $this;
+  }
 
 
 
