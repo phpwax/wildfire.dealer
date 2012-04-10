@@ -4,6 +4,7 @@ class Dealer extends VehicleBaseModel{
   public static $allowed_modules = array('home'=>array('index'=>array()),'content'=>array('index'=>array(), 'edit'=>array('details', 'media', 'google map')));
   public static $dealer_homepage_partial = "__dealer_home";
   public static $dealer_contactpage_partial = "__dealer_contact";
+  public static $dealer_top_pages = array('/vehicles/', '/news/', '/offers/');
   public function setup(){
     $this->define("brand", "ForeignKey", array('target_model'=>'Brand', 'required'=>true, 'scaffold'=>true) );
     $this->define("client_id", "CharField", array('scaffold'=>true) );
@@ -123,14 +124,16 @@ class Dealer extends VehicleBaseModel{
           $subs = array();
           //copy the national main pages
           $i=0;
-          foreach(array('/vehicles/', '/news/', '/offers/') as $skel){
+          foreach(Dealer::$dealer_top_pages as $title=>$skel){
             $look = new $class("live");
             if($found = $look->filter("permalink", $skel)->first()){
               $info = $found->row;
               unset($info['id'], $info['permalink']);
               $info['parent_id'] = $saved->primval;
               $info['sort'] = $i;
-              $info['title'] = str_replace("Latest ", "", $info['title']);
+              //custom names
+              if(!is_numeric($title)) $info['title'] = $title;
+              else $info['title'] = str_replace("Latest ", "", $info['title']);
               $info['dealer_content_id'] = $found->primval;
               $subs[] = $look->update_attributes($info)->generate_permalink()->map_live()->children_move()->show()->save();
               $i++;
