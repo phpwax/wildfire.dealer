@@ -4,6 +4,22 @@ class DealerContent extends WildfireContent{
   public static $page_types = array('test');
   public function setup(){
     parent::setup();
+
+    $this->define("homepage_item", "BooleanField", array('group'=>'homepage banner'));
+    $this->define("homepage_title", "CharField", array('group'=>'homepage banner'));
+    $this->define("homepage_copy", "TextField", array('widget'=>"TinymceTextareaInput", 'group'=>'homepage banner'));
+    $this->define("homepage_text_1", "CharField", array('group'=>'homepage banner'));
+    $this->define("homepage_link_1", "CharField", array('group'=>'homepage banner'));
+    $this->define("homepage_text_2", "CharField", array('group'=>'homepage banner'));
+    $this->define("homepage_link_2", "CharField", array('group'=>'homepage banner'));
+
+    $this->define("map", "CharField", array('group'=>'google map','widget'=>'SelectInput', 'choices'=>array(''=>'-- Select --', 'small'=>'Small', 'large'=>'Large')));
+    $this->define("postcode", "CharField", array('group'=>'google map'));
+    $this->define("lat", "CharField", array('group'=>'google map'));
+    $this->define("lng", "CharField", array('group'=>'google map'));
+
+    $this->define("page_type", "CharField", array('group'=>'advanced', 'widget'=>'SelectInput', 'choices'=>self::page_types() ));
+
     $this->define("brand", "ForeignKey", array('target_model'=>'Brand', 'group'=>'relationships'));
     $this->define("model", "ForeignKey", array('target_model'=>'Model', 'group'=>'relationships'));
     $this->define("derivative", "ForeignKey", array('target_model'=>'Derivative', 'group'=>'relationships'));
@@ -19,6 +35,19 @@ class DealerContent extends WildfireContent{
 		$this->define("children", "ChildContent", array("target_model" => get_class($this), "join_field" => $this->parent_join_field));
 	}
 
+  public function css_selector(){
+    if($this->model) return $this->model->css_selector();
+    return str_replace("/", "-", trim($this->permalink, "/"));
+  }
+  /**
+   * anything in the page directory with __ at the start will be added as an optional display type
+   */
+  public static function page_types(){
+    $pattern = VIEW_DIR."page/__*.html";
+    $options = array(""=>"-- select --");
+    foreach(glob($pattern) as $file) $options[ltrim(str_replace(".html", "", str_replace(VIEW_DIR."page", "", $file)),"/")] = ucwords(str_replace("_", " ", str_replace("/", "", basename($file, ".html"))));
+    return $options;
+  }
 
   public function domain_permalink(){
     if(($dealers = $this->dealers) && ($dealer = $dealers->first()) && ($domains = $dealer->domains) && ($domain = $domains->filter("status",1)->first())) return "//".$domain->webaddress;
