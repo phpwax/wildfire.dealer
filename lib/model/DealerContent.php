@@ -24,7 +24,7 @@ class DealerContent extends WildfireContent{
     if(($dealers = $this->dealers) && ($dealer = $dealers->first()) && ($domains = $dealer->domains) && ($domain = $domains->filter("status",1)->first())) return "//".$domain->webaddress;
     return false;
   }
-  public function permalink($dealer=false, $debug=false){
+  public function permalink($dealer=false){
     if($dealer){
       if($dealer->domain_permalink()) return "/".trim(str_replace($dealer->permalink, "", $this->permalink), "/")."/";
       return $dealer->permalink . trim(str_replace($dealer->permalink, "", $this->permalink), "/")."/";
