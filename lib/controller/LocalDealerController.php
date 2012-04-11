@@ -34,7 +34,6 @@ class LocalDealerController extends CMSApplicationController{
       if($dealer_lookup){
         $obj->dealer_checked = $dealer_lookup->permalink;
         $original_stack = $obj->cms_stack;
-        $obj->canonical_url = "/". trim(implode("/", $original_stack), "/")."/";
         foreach(array_reverse(explode("/", trim($dealer_lookup->permalink,"/"))) as $push) array_unshift($obj->cms_stack, $push);
         $obj->content_lookup($obj);
         //this might be one of those magic internal pages then...
@@ -42,6 +41,7 @@ class LocalDealerController extends CMSApplicationController{
           $obj->cms_throw_missing_content = false;
           $obj->cms_stack = $original_stack;
           $obj->content_lookup($obj);
+          $obj->canonical_url = "/". trim(implode("/", $original_stack), "/")."/";
         }
 
       }
