@@ -55,7 +55,7 @@ class Dealer extends VehicleBaseModel{
       $user_attrs = array('username'=>$this->client_id, 'firstname'=>$this->title, 'password'=>$this->client_id.date("Y"));
       $user = $user->update_attributes($user_attrs);
 
-      $allowed_modules = self::$allowed_modules;
+      $allowed_modules = Dealer::$allowed_modules;
       foreach(CMSApplication::get_modules() as $name=>$info){
         //if the module isnt listed at all, then block access to it
         if(!$allowed_modules[$name]){
@@ -111,7 +111,7 @@ class Dealer extends VehicleBaseModel{
         $dealer_data = array(
           'title'=>$this->title,
           'layout'=>'dealer',
-          'page_type'=>self::$dealer_homepage_partial,
+          'page_type'=>Dealer::$dealer_homepage_partial,
           'content'=>$this->content,
           'parent_id'=>$dealers->primval
         );
@@ -141,7 +141,7 @@ class Dealer extends VehicleBaseModel{
           }
           //add in the contact page
           $contact = new $class;
-          $contact_details = array('title'=>'Contact Us', 'parent_id'=>$saved->primval, 'map'=>'large','page_type'=>self::$dealer_contactpage_partial, 'sort'=>$i, 'date_start'=>date("Y-m-d", strtotime("now-1 day")));
+          $contact_details = array('title'=>'Contact Us', 'parent_id'=>$saved->primval, 'map'=>'large','page_type'=>Dealer::$dealer_contactpage_partial, 'sort'=>$i, 'date_start'=>date("Y-m-d", strtotime("now-1 day")));
           $contact->update_attributes($contact_details)->generate_permalink()->map_live()->children_move()->show()->save();
         }
 
