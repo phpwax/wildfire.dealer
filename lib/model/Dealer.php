@@ -25,6 +25,7 @@ class Dealer extends VehicleBaseModel{
     $this->define("parts_opening_times", "TextField", array('widget'=>"TinymceTextareaInput", 'group'=>'contact'));
 
     $this->columns['status'][1]['group'] = 'status';
+    $this->columns['status'][1]['editable'] = true;
     $this->define("sales", "BooleanField", array('maxlength'=>2,'group'=>'status') );
     $this->define("service", "BooleanField", array('maxlength'=>2,'group'=>'status') );
     $this->define("parts", "BooleanField", array('maxlength'=>2,'group'=>'status') );
