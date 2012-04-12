@@ -29,6 +29,10 @@ class LocalDealerController extends CMSApplicationController{
       }
       if(!$dealer_lookup){
         $obj->content_lookup($obj);
+        if(in_array("dealers", $obj->cms_stack)){
+          $obj->dealer_checked = "/".trim(implode("/", array_slice($obj->cms_stack,0,2)), "/")."/";
+          $obj->dealer_check();
+        }
       }
       //lookin for dealer, so push the dealer urls on to the stack
       if($dealer_lookup){
@@ -97,6 +101,7 @@ class LocalDealerController extends CMSApplicationController{
         $this->content_id_stack = array($item->primval);
         $this->body_class = $this->body_id = $this->dealer_site_id;
         $this->use_layout = $this->dealer_site_layout;
+        $this->dealer_model = $dealers->first();
       }else if($this->dealer){
         $this->content_id_stack[] = $item->primval;
         $this->content_object_stack[] = $item;
@@ -104,7 +109,7 @@ class LocalDealerController extends CMSApplicationController{
 
       }
     }
-    if($this->dealer) $this->dealer_model = $this->dealer->dealers->first();
+
   }
 
 }
