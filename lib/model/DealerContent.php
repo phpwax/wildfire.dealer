@@ -14,6 +14,7 @@ class DealerContent extends WildfireContent{
     $this->define("homepage_link_2", "CharField", array('group'=>'homepage banner'));
     $this->define("homepage_text_3", "CharField", array('group'=>'homepage banner'));
     $this->define("homepage_link_3", "CharField", array('group'=>'homepage banner'));
+    $this->define("homepage_logo_link", "CharField", array('group'=>'homepage banner'));
 
     $this->define("map", "CharField", array('group'=>'google map','widget'=>'SelectInput', 'choices'=>array(''=>'-- Select --', 'small'=>'Small', 'large'=>'Large')));
     $this->define("postcode", "CharField", array('group'=>'google map'));
