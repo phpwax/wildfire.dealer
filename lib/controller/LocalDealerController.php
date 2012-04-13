@@ -29,7 +29,7 @@ class LocalDealerController extends CMSApplicationController{
       }
       if(!$dealer_lookup){
         $obj->content_lookup($obj);
-        if(in_array("dealers", $obj->cms_stack)){
+        if(in_array("dealers", $obj->cms_stack) && count($obj->cms_stack) > 1){
           $obj->dealer_checked = "/".trim(implode("/", array_slice($obj->cms_stack,0,2)), "/")."/";
           $obj->dealer_check();
         }
