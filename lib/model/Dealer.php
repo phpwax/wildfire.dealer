@@ -6,7 +6,7 @@ class Dealer extends VehicleBaseModel{
   public static $dealer_contactpage_partial = "__dealer_contact";
   public static $dealer_top_pages = array('/vehicles/', '/news/', '/offers/');
   public function setup(){
-    $this->define("brand", "ForeignKey", array('target_model'=>'Brand', 'required'=>true, 'scaffold'=>true) );
+    $this->define("brand", "ForeignKey", array('target_model'=>'Brand', 'scaffold'=>true) );
     $this->define("client_id", "CharField", array('scaffold'=>true) );
 
     parent::setup();
