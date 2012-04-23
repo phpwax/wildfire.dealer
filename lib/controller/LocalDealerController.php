@@ -17,7 +17,7 @@ class LocalDealerController extends CMSApplicationController{
       $dealer_lookup = false;
       //check domain name
       $server = $_SERVER['HTTP_HOST'];
-      if($server != "mg.co.uk" && $server != "mg.dev"){
+      if($server != Config::get("domains/live") && $server != Config::get("domains/dev")){
         $dclass = $obj->domain_class;
         $domain = new $dclass;
         if(($found = $domain->filter("webaddress", $server)->filter("status", 1)->first()) && ($dealer = $found->dealers) &&
