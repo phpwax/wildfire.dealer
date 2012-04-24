@@ -23,9 +23,9 @@ class DealerContent extends WildfireContent{
 
     $this->define("page_type", "CharField", array('group'=>'advanced', 'widget'=>'SelectInput', 'choices'=>self::page_types() ));
 
-    $this->define("brand", "ForeignKey", array('target_model'=>'Brand', 'group'=>'relationships'));
-    $this->define("model", "ForeignKey", array('target_model'=>'Model', 'group'=>'relationships'));
-    $this->define("derivative", "ForeignKey", array('target_model'=>'Derivative', 'group'=>'relationships'));
+    $this->define("brand", "ManyToManyField", array('target_model'=>'Brand', 'group'=>'relationships'));
+    $this->define("model", "ManyToManyField", array('target_model'=>'Model', 'group'=>'relationships'));
+    $this->define("derivative", "ManyToManyField", array('target_model'=>'Derivative', 'group'=>'relationships'));
     $this->define("national_content", "ForeignKey", array('group'=>'advanced', "target_model" => get_parent_class($this) ));
     $this->define("for_dealer", "BooleanField", array('group'=>'advanced', 'default'=>1)); //turn it on by default
 
