@@ -50,7 +50,7 @@ class LocalDealerController extends CMSApplicationController{
 
       }
       //check for dealer urls /dealer/xx
-      if($obj->cms_throw_missing_content && !$obj->dealer_checked){
+      if($obj->cms_throw_missing_content) {
         $stack = $obj->cms_stack;
         //if this is a dealer url, then pop off the first 2
         if(array_shift($stack) == "dealers" && (count($stack))){
