@@ -51,7 +51,7 @@ class DealerContent extends WildfireContent{
   }
 
   public function css_selector(){
-    if($this->model) return $this->model->css_selector();
+    if($this->model->count() && ($model = $this->model->first())) return $model->css_selector();
     return str_replace("/", "-", trim($this->permalink, "/"));
   }
   /**
