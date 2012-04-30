@@ -4,6 +4,7 @@ class Dealer extends VehicleBaseModel{
   public static $allowed_modules = array('home'=>array('index'=>array()),'content'=>array('index'=>array(), 'edit'=>array('details', 'media', 'google map')));
   public static $dealer_homepage_partial = "__dealer_home";
   public static $dealer_top_pages = array('/vehicles/', '/news/', '/offers/');
+  public static $dealer_section = "/dealers/";
   public static $dealer_extra_pages = array(
     array('title'=>'Contact Us', 'map'=>'large','page_type'=>'__dealer_contact')
   );
@@ -103,12 +104,12 @@ class Dealer extends VehicleBaseModel{
   public function dealer_creation(){
     $class = CONTENT_MODEL;
     $model = new $class("live");
-    $url = "/dealers/".Inflections::to_url($this->title)."/";
+    $url = Dealer::$dealer_section.Inflections::to_url($this->title)."/";
     if(($pages = $this->pages) && $pages->count() || $model->filter("permalink", $url)->first()) return true;
     else{
       //find dealers section
 
-      if($dealers = $model->filter("permalink", "/dealers/")->first()){
+      if($dealers = $model->filter("permalink", Dealer::$dealer_section)->first()){
         $model = $model->clear();
         //create the first level of this dealer
         $dealer_data = array(
