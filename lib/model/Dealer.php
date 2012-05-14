@@ -49,6 +49,11 @@ class Dealer extends VehicleBaseModel{
     parent::before_save();
     if($this->create_site) $this->dealer_creation();
     if($this->create_user) $this->user_creation();
+    if($this->create_branch) $this->branch_creation();
+  }
+
+  public function branch_creation(){
+    WaxEvent::run("Dealer.branch_creation", $this);
   }
 
   //make a new cms user for the dealership
@@ -97,6 +102,7 @@ class Dealer extends VehicleBaseModel{
 
       }
     }
+    WaxEvent::run("Dealer.user_creation", $this);
   }
 
   //create the dealer section in the cms
@@ -154,6 +160,7 @@ class Dealer extends VehicleBaseModel{
 
       }
     }
+    WaxEvent::run("Dealer.dealer_creation", $this);
     return $this;
   }
 
