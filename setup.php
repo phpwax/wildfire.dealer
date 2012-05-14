@@ -1,4 +1,5 @@
 <?
+define("DEALERS",true);
 CMSApplication::register_module("dealer", array("display_name"=>"Dealers", "link"=>"/admin/dealer/"));
 CMSApplication::register_module("domain", array("display_name"=>"Dealer Domains", "link"=>"/admin/domain/", 'split'=>true));
 CMSApplication::register_module("testdrive", array("display_name"=>"Test Drive Requests", "link"=>"/admin/testdrive/", 'split'=>true));
