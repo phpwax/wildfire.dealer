@@ -53,7 +53,8 @@ class Dealer extends VehicleBaseModel{
   }
 
   public function branch_creation(){
-    WaxEvent::run("Dealer.branch_creation", $this);
+    $class = get_class($this);
+    WaxEvent::run($class.".branch_creation", $this);
   }
 
   //make a new cms user for the dealership
@@ -102,7 +103,8 @@ class Dealer extends VehicleBaseModel{
 
       }
     }
-    WaxEvent::run("Dealer.user_creation", $this);
+    $class = get_class($this);
+    WaxEvent::run($class.".user_creation", $this);
   }
 
   //create the dealer section in the cms
@@ -160,7 +162,8 @@ class Dealer extends VehicleBaseModel{
 
       }
     }
-    WaxEvent::run("Dealer.dealer_creation", $this);
+    $class = get_class($this);
+    WaxEvent::run($class.".dealer_creation", $this);
     return $this;
   }
 
