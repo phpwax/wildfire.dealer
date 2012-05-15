@@ -49,11 +49,13 @@ class Dealer extends VehicleBaseModel{
     parent::before_save();
     if($this->create_site) $this->dealer_creation();
     if($this->create_user) $this->user_creation();
-    if($this->create_branch) $this->branch_creation();
+    if($this->columns['create_branch'] && $this->create_branch) $this->branch_creation();
   }
 
   public function branch_creation(){
     $class = get_class($this);
+    $user = new WildfireUser;
+    $this->wu = $found = $user->filter("username", $this->client_id)->first()
     WaxEvent::run($class.".branch_creation", $this);
   }
 
@@ -62,7 +64,7 @@ class Dealer extends VehicleBaseModel{
     $user = new WildfireUser;
     if($this->client_id && (!$found = $user->filter("username", $this->client_id)->first())){
       $user_attrs = array('username'=>$this->client_id, 'firstname'=>$this->title, 'password'=>$this->client_id.date("Y"));
-      $user = $user->update_attributes($user_attrs);
+      $this->wu = $user = $user->update_attributes($user_attrs);
 
       $allowed_modules = Dealer::$allowed_modules;
       foreach(CMSApplication::get_modules() as $name=>$info){
@@ -102,9 +104,10 @@ class Dealer extends VehicleBaseModel{
         }
 
       }
+      $class = get_class($this);
+      WaxEvent::run($class.".user_creation", $this);
     }
-    $class = get_class($this);
-    WaxEvent::run($class.".user_creation", $this);
+
   }
 
   //create the dealer section in the cms
@@ -161,9 +164,10 @@ class Dealer extends VehicleBaseModel{
         }
 
       }
+      $class = get_class($this);
+      WaxEvent::run($class.".dealer_creation", $this);
     }
-    $class = get_class($this);
-    WaxEvent::run($class.".dealer_creation", $this);
+
     return $this;
   }
 
