@@ -16,5 +16,15 @@ WaxEvent::add(CONTENT_MODEL.".setup", function(){
   $model = WaxEvent::data();
   if(!$model->columns['dealers']) $model->define("dealers", "ManyToManyField", array('target_model'=>'Dealer', 'group'=>'relationships'));
 });
+//add a link from the users to a dealership
+WaxEvent::add("WildfireUser.setup", function(){
+  $obj = WaxEvent::data();
+  $obj->define("dealer", "ForeignKey", array('target_model'=>"Dealer", 'group'=>'relationships'));
+});
+//add in this so it will block all views of the branch & join the created user to the dealership
+WaxEvent::add("Dealer.user_creation", function(){
+  $dealer = WaxEvent::data();
+  $dealer->wu->dealer = $dealer;
+});
 
 ?>
