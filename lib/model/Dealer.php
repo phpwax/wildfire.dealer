@@ -56,7 +56,7 @@ class Dealer extends VehicleBaseModel{
   public function branch_creation(){
     $class = get_class($this);
     $user = new WildfireUser;
-    $this->wu = $found = $user->filter("username", $this->client_id)->first()
+    $this->wu = $found = $user->filter("username", $this->client_id)->first();
     WaxEvent::run($class.".branch_creation", $this);
   }
 
