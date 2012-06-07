@@ -94,13 +94,15 @@ class Dealer extends VehicleBaseModel{
               $block->update_attributes(array($user->table."_id"=>$user->primval, 'class'=>$name, 'operation'=>$op));
             }else{
               //if it is, block tabs that havent been listed
-              foreach($tabs as $tab){
-                if(!in_array($tab, $mods[$op])){
-                  $block = new WildfirePermissionBlacklist;
-                  $block->update_attributes(array($user->table."_id"=>$user->primval, 'class'=>$name, 'operation'=>"tab-".$tab));
-                }
+              foreach($tabs as $tab_i => $tab){
+                if(in_array($tab, $mods[$op])) unset($tabs[$tab_i]);
               }
             }
+          }
+
+          foreach($tabs as $tab){
+            $block = new WildfirePermissionBlacklist;
+            $block->update_attributes(array($user->table."_id"=>$user->primval, 'class'=>$name, 'operation'=>"tab-".$tab));
           }
         }
 
