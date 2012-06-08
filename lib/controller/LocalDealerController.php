@@ -67,6 +67,12 @@ class LocalDealerController extends CMSApplicationController{
         }
       }
 
+      if(($dealer_model = $obj->dealer_model) && defined("UVL")){
+        WaxEvent::add("uvl.vehicle.filters", function() use($dealer_model){
+          $model = WaxEvent::data();
+          $model->filter("dealer_id", $dealer_model->id);
+        });
+      }
     });
   }
 
