@@ -19,7 +19,7 @@ if(!defined("DEALER_MODEL")){
 
 WaxEvent::add(CONTENT_MODEL.".setup", function(){
   $model = WaxEvent::data();
-  if(!$model->columns['dealers']) $model->define("dealers", "ManyToManyField", array('target_model'=>'Dealer', 'group'=>'relationships'));
+  if(!$model->columns['dealers']) $model->define("dealers", "ManyToManyField", array('target_model'=>DEALER_MODEL, 'group'=>'relationships'));
 });
 //add a link from the users to a dealership
 WaxEvent::add("WildfireUser.setup", function(){
