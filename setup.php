@@ -12,6 +12,11 @@ if(!defined("CONTENT_MODEL")){
   define("CONTENT_MODEL", $con->cms_content_class);
 }
 
+if(!defined("DEALER_MODEL")){
+  if(!$con) $con = new ApplicationController(false, false);
+  define("DEALER_MODEL", $con->dealer_class);
+}
+
 WaxEvent::add(CONTENT_MODEL.".setup", function(){
   $model = WaxEvent::data();
   if(!$model->columns['dealers']) $model->define("dealers", "ManyToManyField", array('target_model'=>'Dealer', 'group'=>'relationships'));

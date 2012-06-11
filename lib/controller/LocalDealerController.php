@@ -3,6 +3,7 @@
 class LocalDealerController extends CMSApplicationController{
   public $cms_content_class = "DealerContent";
   public $domain_class = "Domain";
+  public $dealer_class = "Dealer";
   public $dealer_site_id = "dealer";
   public $dealer_site_layout = "dealer";
 
