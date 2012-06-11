@@ -28,7 +28,7 @@ class LocalDealerController extends CMSApplicationController{
           ($page = $dealer->pages) &&
           ($page = $page->scope("live")->first())
         ){
-          $dealer_lookup = $page;
+          $obj->dealer = $dealer_lookup = $page;
           $obj->dealer_model = $dealer;
         }
       }
