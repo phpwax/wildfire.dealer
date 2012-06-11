@@ -28,8 +28,8 @@ class LocalDealerController extends CMSApplicationController{
           ($page = $dealer->pages) &&
           ($page = $page->scope("live")->first())
         ){
-          $obj->dealer = $dealer_lookup = $page;
-          $obj->dealer_model = $dealer;
+          $dealer_lookup = $page;
+          $obj->setup_dealer_vars($page, $dealer);
         }
       }
       if(!$dealer_lookup){
@@ -107,12 +107,9 @@ class LocalDealerController extends CMSApplicationController{
     //this is for dealer landing page
     foreach($this->content_object_stack as $item){
       if(($dealers = $item->dealers) && $dealers->count()){
-        $this->dealer = $item;
+        $this->setup_dealer_vars($item, $dealers->first());
         $this->content_object_stack = array($item);
         $this->content_id_stack = array($item->primval);
-        $this->body_class = $this->body_id = $this->dealer_site_id;
-        $this->use_layout = $this->dealer_site_layout;
-        $this->dealer_model = $dealers->first();
       }else if($this->dealer){
         $this->content_id_stack[] = $item->primval;
         $this->content_object_stack[] = $item;
@@ -121,6 +118,13 @@ class LocalDealerController extends CMSApplicationController{
       }
     }
 
+  }
+
+  public function setup_dealer_vars($dealer_content, $dealer){
+    $this->dealer = $dealer_content;
+    $this->body_class = $this->body_id = $this->dealer_site_id;
+    $this->use_layout = $this->dealer_site_layout;
+    $this->dealer_model = $dealer;
   }
 
 }
