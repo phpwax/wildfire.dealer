@@ -152,7 +152,11 @@ class Dealer extends VehicleBaseModel{
               if(!is_numeric($title)) $info['title'] = $title;
               else $info['title'] = str_replace("Latest ", "", $info['title']);
               $info['dealer_content_id'] = $found->primval;
-              $subs[] = $look->update_attributes($info)->generate_permalink()->map_live()->children_move()->show()->save();
+              $subs[] = $page = $look->update_attributes($info)->generate_permalink()->map_live()->children_move()->show()->save();
+
+              //manytomany copy
+              foreach($found->columns as $name=>$info) if($info[0] == "ManyToManyField") foreach($found->$name as $assoc) $page->$name = $assoc;
+
               $i++;
             }
           }
