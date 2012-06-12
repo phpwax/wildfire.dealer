@@ -80,4 +80,28 @@ class DealerContent extends WildfireContent{
     if(($this->dealer_content_id && ($pg = $this->national_content) && $pg->has_children()) || parent::has_children()) return true;
     return false;
   }
+
+  //need to overwrite path_to/from_root to handle the national_content children pointer for content ancestry
+  public function path_to_root($dealer){
+    if(!$dealer) return parent::path_to_root();
+    $path_from_root = parent::path_from_root();
+    $search_for_dealer_copies = clone $this;
+    foreach($path_from_root->rowset as $i => $ancestor){
+      foreach($search_for_dealer_copies->clear()->filter("dealer_content_id", $ancestor['id'])->all() as $possible_dealer_page){
+        foreach($possible_dealer_page->path_from_root() as $possible_dealer_page_ancestor){
+          if($possible_dealer_page_ancestor->id == $dealer->id){
+            //take the ancestry from root to the the dealer copy, and after that the rest should be up to the page we're on
+            $path_from_root->rowset = $possible_dealer_page->path_from_root()->rowset + array_slice($path_from_root->rowset, $i);
+            break 3;
+          }
+        }
+      }
+    }
+    return new WaxRecordset(clone $this, array_reverse((array)$path_from_root->rowset));
+  }
+
+  public function path_from_root($dealer){
+    if(!$dealer) return parent::path_from_root();
+    return new WaxRecordset(clone $this, array_reverse((array)$this->path_to_root($dealer)->rowset));
+  }
 }
