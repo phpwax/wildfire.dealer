@@ -3,6 +3,7 @@
 class LocalDealerController extends CMSApplicationController{
   public $cms_content_class = "DealerContent";
   public $domain_class = "Domain";
+  public $dealer_class = "Dealer";
   public $dealer_site_id = "dealer";
   public $dealer_site_layout = "dealer";
 
@@ -20,11 +21,15 @@ class LocalDealerController extends CMSApplicationController{
       if($server != Config::get("domains/live") && $server != Config::get("domains/dev")){
         $dclass = $obj->domain_class;
         $domain = new $dclass;
-        if(($found = $domain->filter("webaddress", $server)->filter("status", 1)->first()) && ($dealer = $found->dealers) &&
-          ($dealer = $dealer->first()) && ($page = $dealer->pages) &&
-          ($page = $page->scope("live")->first()) ){
-
+        if(
+          ($found = $domain->filter("webaddress", $server)->filter("status", 1)->first()) &&
+          ($dealer = $found->dealers) &&
+          ($dealer = $dealer->first()) &&
+          ($page = $dealer->pages) &&
+          ($page = $page->scope("live")->first())
+        ){
           $dealer_lookup = $page;
+          $obj->setup_dealer_vars($page, $dealer);
         }
       }
       if(!$dealer_lookup){
@@ -63,6 +68,12 @@ class LocalDealerController extends CMSApplicationController{
         }
       }
 
+      if(($dealer_model = $obj->dealer_model) && defined("UVL")){
+        WaxEvent::add("uvl.vehicle.filters", function() use($dealer_model){
+          $model = WaxEvent::data();
+          $model->filter("dealer_id", $dealer_model->id);
+        });
+      }
     });
   }
 
@@ -96,12 +107,9 @@ class LocalDealerController extends CMSApplicationController{
     //this is for dealer landing page
     foreach($this->content_object_stack as $item){
       if(($dealers = $item->dealers) && $dealers->count()){
-        $this->dealer = $item;
+        $this->setup_dealer_vars($item, $dealers->first());
         $this->content_object_stack = array($item);
         $this->content_id_stack = array($item->primval);
-        $this->body_class = $this->body_id = $this->dealer_site_id;
-        $this->use_layout = $this->dealer_site_layout;
-        $this->dealer_model = $dealers->first();
       }else if($this->dealer){
         $this->content_id_stack[] = $item->primval;
         $this->content_object_stack[] = $item;
@@ -110,6 +118,13 @@ class LocalDealerController extends CMSApplicationController{
       }
     }
 
+  }
+
+  public function setup_dealer_vars($dealer_content, $dealer){
+    $this->dealer = $dealer_content;
+    $this->body_class = $this->body_id = $this->dealer_site_id;
+    $this->use_layout = $this->dealer_site_layout;
+    $this->dealer_model = $dealer;
   }
 
 }

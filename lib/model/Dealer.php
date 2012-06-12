@@ -4,6 +4,7 @@ class Dealer extends VehicleBaseModel{
   public static $allowed_modules = array('home'=>array('index'=>array()),'content'=>array('index'=>array(), 'edit'=>array('details', 'media', 'google map')));
   public static $dealer_homepage_partial = "__dealer_home";
   public static $dealer_top_pages = array('/vehicles/', '/news/', '/offers/');
+  public static $dealer_section = "/dealers/";
   public static $dealer_extra_pages = array(
     array('title'=>'Contact Us', 'map'=>'large','page_type'=>'__dealer_contact')
   );
@@ -49,6 +50,14 @@ class Dealer extends VehicleBaseModel{
     parent::before_save();
     if($this->create_site) $this->dealer_creation();
     if($this->create_user) $this->user_creation();
+    if($this->columns['create_branch'] && $this->create_branch) $this->branch_creation();
+  }
+
+  public function branch_creation(){
+    $class = get_class($this);
+    $user = new WildfireUser;
+    $this->wu = $found = $user->filter("username", $this->client_id)->first();
+    WaxEvent::run($class.".branch_creation", $this);
   }
 
   //make a new cms user for the dealership
@@ -56,7 +65,7 @@ class Dealer extends VehicleBaseModel{
     $user = new WildfireUser;
     if($this->client_id && (!$found = $user->filter("username", $this->client_id)->first())){
       $user_attrs = array('username'=>$this->client_id, 'firstname'=>$this->title, 'password'=>$this->client_id.date("Y"));
-      $user = $user->update_attributes($user_attrs);
+      $this->wu = $user = $user->update_attributes($user_attrs);
 
       $allowed_modules = Dealer::$allowed_modules;
       foreach(CMSApplication::get_modules() as $name=>$info){
@@ -85,30 +94,35 @@ class Dealer extends VehicleBaseModel{
               $block->update_attributes(array($user->table."_id"=>$user->primval, 'class'=>$name, 'operation'=>$op));
             }else{
               //if it is, block tabs that havent been listed
-              foreach($tabs as $tab){
-                if(!in_array($tab, $mods[$op])){
-                  $block = new WildfirePermissionBlacklist;
-                  $block->update_attributes(array($user->table."_id"=>$user->primval, 'class'=>$name, 'operation'=>"tab-".$tab));
-                }
+              foreach($tabs as $tab_i => $tab){
+                if(in_array($tab, $mods[$op])) unset($tabs[$tab_i]);
               }
             }
+          }
+
+          foreach($tabs as $tab){
+            $block = new WildfirePermissionBlacklist;
+            $block->update_attributes(array($user->table."_id"=>$user->primval, 'class'=>$name, 'operation'=>"tab-".$tab));
           }
         }
 
       }
+      $class = get_class($this);
+      WaxEvent::run($class.".user_creation", $this);
     }
+
   }
 
   //create the dealer section in the cms
   public function dealer_creation(){
     $class = CONTENT_MODEL;
     $model = new $class("live");
-    $url = "/dealers/".Inflections::to_url($this->title)."/";
+    $url = Dealer::$dealer_section.Inflections::to_url($this->title)."/";
     if(($pages = $this->pages) && $pages->count() || $model->filter("permalink", $url)->first()) return true;
     else{
       //find dealers section
 
-      if($dealers = $model->filter("permalink", "/dealers/")->first()){
+      if($dealers = $model->filter("permalink", Dealer::$dealer_section)->first()){
         $model = $model->clear();
         //create the first level of this dealer
         $dealer_data = array(
@@ -157,7 +171,10 @@ class Dealer extends VehicleBaseModel{
         }
 
       }
+      $class = get_class($this);
+      WaxEvent::run($class.".dealer_creation", $this);
     }
+
     return $this;
   }
 
