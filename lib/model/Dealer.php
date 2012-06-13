@@ -48,9 +48,6 @@ class Dealer extends VehicleBaseModel{
 
   public function before_save(){
     parent::before_save();
-    if($this->create_site) $this->dealer_creation();
-    if($this->create_user) $this->user_creation();
-    if($this->columns['create_branch'] && $this->create_branch) $this->branch_creation();
   }
 
   public function branch_creation(){
@@ -174,7 +171,6 @@ class Dealer extends VehicleBaseModel{
       $class = get_class($this);
       WaxEvent::run($class.".dealer_creation", $this);
     }
-
     return $this;
   }
 

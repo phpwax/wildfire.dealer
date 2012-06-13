@@ -32,4 +32,14 @@ WaxEvent::add("Dealer.user_creation", function(){
   $dealer->wu->dealer = $dealer;
 });
 
+WaxEvent::add("cms.save.after", function(){
+  $data = WaxEvent::data();
+  if($data->model_class == DEALER_MODEL){
+    $model = $data->model;
+    if($model->create_site) $model->dealer_creation();
+    if($model->create_user) $model->user_creation();
+    if($model->columns['create_branch'] && $model->create_branch) $model->branch_creation();
+  }
+});
+
 ?>
