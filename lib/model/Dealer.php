@@ -9,7 +9,7 @@ class Dealer extends VehicleBaseModel{
     array('title'=>'Contact Us', 'map'=>'large','page_type'=>'__dealer_contact')
   );
   public function setup(){
-    $this->define("brand", "ForeignKey", array('target_model'=>'Brand', 'required'=>true, 'scaffold'=>true) );
+    $this->define("brand", "ForeignKey", array('target_model'=>'Brand', 'scaffold'=>true) );
     $this->define("client_id", "CharField", array('scaffold'=>true) );
 
     parent::setup();
