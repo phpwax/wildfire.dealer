@@ -5,6 +5,9 @@ class Dealer extends VehicleBaseModel{
   public static $dealer_homepage_partial = "__dealer_home";
   public static $dealer_contactpage_partial = "__dealer_contact";
   public static $dealer_top_pages = array('/vehicles/', '/news/', '/offers/');
+  public static $dealer_extra_pages = array(
+    array('title'=>'Contact Us', 'map'=>'large','page_type'=>'__dealer_contact')
+  );
   public function setup(){
     $this->define("brand", "ForeignKey", array('target_model'=>'Brand', 'required'=>true, 'scaffold'=>true) );
     $this->define("client_id", "CharField", array('scaffold'=>true) );
@@ -140,10 +143,14 @@ class Dealer extends VehicleBaseModel{
               $i++;
             }
           }
-          //add in the contact page
-          $contact = new $class;
-          $contact_details = array('title'=>'Contact Us', 'parent_id'=>$saved->primval, 'map'=>'large','page_type'=>Dealer::$dealer_contactpage_partial, 'sort'=>$i, 'date_start'=>date("Y-m-d", strtotime("now-1 day")));
-          $contact->update_attributes($contact_details)->generate_permalink()->map_live()->children_move()->show()->save();
+          foreach(Dealer::$dealer_extra_pages as $info){
+            $pg = new $class;
+            $info['parent_id'] = $saved->primval;
+            $info['date_start'] = date("Y-m-d", strtotime("now-1 day"));
+            $info['sort'] = $i;
+            $pg->update_attributes($info)->generate_permalink()->map_live()->children_move()->show()->save();
+            $i++;
+          }
         }
 
       }
