@@ -104,6 +104,11 @@ class Dealer extends VehicleBaseModel{
         }
 
       }
+      $block = new WildfirePermissionBlacklist;
+      foreach($this->pages as $page){
+        $block->update_attributes(array($user->table."_id"=>$user->primval, 'class'=>CONTENT_MODEL, 'operation'=>"tree", "value"=>$page->primval));
+      }
+
       $class = get_class($this);
       WaxEvent::run($class.".user_creation", $this);
     }
