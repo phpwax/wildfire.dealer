@@ -167,7 +167,7 @@ class Dealer extends VehicleBaseModel{
             $info['parent_id'] = $saved->primval;
             $info['date_start'] = date("Y-m-d", strtotime("now-1 day"));
             $info['sort'] = $i;
-            $pg->update_attributes($info)->generate_permalink()->map_live()->children_move()->show()->save();
+            $extras[] = $pg->update_attributes($info)->generate_permalink()->map_live()->children_move()->show()->save();
             $i++;
           }
         }
@@ -176,7 +176,7 @@ class Dealer extends VehicleBaseModel{
       $class = get_class($this);
       WaxEvent::run($class.".dealer_creation", $this);
     }
-    return $this;
+    return array("subs"=>$subs, "extras"=>$extras);
   }
 
 
