@@ -90,7 +90,7 @@ class DealerContent extends WildfireContent{
     $path_from_root = parent::path_from_root();
     $search_for_dealer_copies = clone $this;
     foreach($path_from_root->rowset as $i => $ancestor){
-      foreach($search_for_dealer_copies->clear()->filter("dealer_content_id", $ancestor['id'])->all() as $possible_dealer_page){
+      foreach($search_for_dealer_copies->clear()->filter("dealer_content_id", is_array($ancestor)?$ancestor['id']:$ancestor)->all() as $possible_dealer_page){
         foreach($possible_dealer_page->path_from_root() as $possible_dealer_page_ancestor){
           if($possible_dealer_page_ancestor->id == $dealer->id){
             //take the ancestry from root to the the dealer copy, and after that the rest should be up to the page we're on
