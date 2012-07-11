@@ -44,6 +44,7 @@ class Dealer extends VehicleBaseModel{
     $this->define("create_site", "BooleanField", array('group'=>'advanced'));
     $this->define("analytics_tracker_id", "CharField", array('group'=>'advanced'));
     $this->define("analytics_id", "CharField", array('group'=>'advanced'));
+    $this->define("autotrader_id", "CharField", array('group'=>'advanced'));
   }
 
   public function before_save(){
