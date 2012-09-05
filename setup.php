@@ -27,15 +27,14 @@ WaxEvent::add("WildfireUser.setup", function(){
   $obj->define("dealer", "ForeignKey", array('target_model'=>"Dealer", 'group'=>'relationships'));
 });
 //add in this so it will block all views of the branch & join the created user to the dealership
-WaxEvent::add("Dealer.user_creation", function(){
+WaxEvent::add(DEALER_MODEL.".user_creation", function(){
   $dealer = WaxEvent::data();
   $dealer->wu->dealer = $dealer;
 });
 
 WaxEvent::add("cms.save.after", function(){
   $data = WaxEvent::data();
-  if($data->model_class == DEALER_MODEL){
-    $model = $data->model;
+  if($data->model_class == DEALER_MODEL && ($model = $data->model) && $model->primval){
     if($model->create_site) $model->dealer_creation();
     if($model->create_user) $model->user_creation();
     if($model->columns['create_branch'] && $model->create_branch) $model->branch_creation();
