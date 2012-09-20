@@ -2,6 +2,7 @@
 class Tracking extends WaxModel{
 
   public function setup(){
+    $this->define("title", "CharField", array("scaffold"=>true));
     $this->define("source", "CharField", array('scaffold'=>true));
     $this->define("code", "TextField");
     if(defined("CONTENT_MODEL")) $this->define("pages", "ManyToManyField", array('target_model'=>CONTENT_MODEL, 'group'=>'relationships'));
