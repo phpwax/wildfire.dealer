@@ -24,7 +24,7 @@ WaxEvent::add(CONTENT_MODEL.".setup", function(){
 //add a link from the users to a dealership
 WaxEvent::add("WildfireUser.setup", function(){
   $obj = WaxEvent::data();
-  $obj->define("dealer", "ForeignKey", array('target_model'=>"Dealer", 'group'=>'relationships'));
+  $obj->define("dealer", "ForeignKey", array('target_model'=>DEALER_MODEL, 'group'=>'relationships', 'col_name'=>"dealer_id"));
 });
 //add in this so it will block all views of the branch & join the created user to the dealership
 WaxEvent::add(DEALER_MODEL.".user_creation", function(){
