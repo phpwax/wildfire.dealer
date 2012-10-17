@@ -8,6 +8,8 @@ class Dealer extends VehicleBaseModel{
   public static $dealer_extra_pages = array(
     array('title'=>'Contact Us', 'map'=>'large','page_type'=>'__dealer_contact')
   );
+  public $vrm_endpoint = "http://vrm.dev/api/";//"http://v.obb.im/api/";
+
   public function setup(){
     $this->define("brand", "ForeignKey", array('target_model'=>'Brand', 'scaffold'=>true) );
     $this->define("client_id", "CharField", array('scaffold'=>true) );
@@ -45,6 +47,9 @@ class Dealer extends VehicleBaseModel{
     $this->define("analytics_tracker_id", "CharField", array('group'=>'advanced'));
     $this->define("analytics_id", "CharField", array('group'=>'advanced'));
     $this->define("autotrader_id", "CharField", array('group'=>'advanced'));
+
+    $this->define("create_vrm", "BooleanField", array("group"=>"advanced"));
+    $this->define("vrm_token", "CharField", array('group'=>'advanced'));
   }
 
   public function before_save(){
@@ -180,7 +185,26 @@ class Dealer extends VehicleBaseModel{
     return array("subs"=>$subs, "extras"=>$extras);
   }
 
+  public function vrm_creation(){
 
+    if($this->vrm_token) return true;
+    else{
+      $account = array("username"=>$this->client_id,"password"=>$this->client_id.date("Y"));
+      $curl = new WaxBackgroundCurl(array('url'=>$this->vrm_endpoint."create.json", "cache"=>false, "post_string"=>http_build_query($account,"","&")));
+      $response = $curl->fetch();
+      $result = json_decode($response,TRUE);
+      foreach($result as &$value) {
+        if(empty($value)) $value = FALSE;
+        if(is_array($value)) $value = FALSE;
+      }
+
+      if($result && $result["token"]) {
+        $this->vrm_token = $result["token"];
+        return $this->save();
+      }
+      return false;
+    }
+  }
 
 }
 

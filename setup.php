@@ -37,6 +37,7 @@ WaxEvent::add("cms.save.after", function(){
   if($data->model_class == DEALER_MODEL && ($model = $data->model) && $model->primval){
     if($model->create_site) $model->dealer_creation();
     if($model->create_user) $model->user_creation();
+    if($model->create_vrm) $model->vrm_creation();
     if($model->columns['create_branch'] && $model->create_branch) $model->branch_creation();
   }
 });
