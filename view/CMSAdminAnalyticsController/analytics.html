@@ -1,0 +1,31 @@
+<div class='cms-wrapper cms-uploads-0'>
+<?if($current_user->allowed($module_name, "index")):?>
+  <?$mods = CMSApplication::get_modules()?>
+  <div class='index_container clearfix'>
+
+    <form action="/admin/<?=$module_name?>/" method="post" id="filters" class='clearfix filters filters-<?=$module_name?>'>
+
+      <fieldset class='filters_container' id="filters_container" data-replace=".data_table" data-action="/admin/<?=$module_name?>/index.ajax">
+        <span>Analytics for the Dealers ordered by</span>
+        <select name="filter[order]">
+          <option value="ga:visits">Visits</option>
+          <option value="ga:pageviews">Page Views</option>
+        </select>
+        <span>from</span>
+        <select name="filter[date]">
+          <option value=""><?=date("F Y")?></option>
+          <?for($i=1;$i<13;$i++):?>
+          <option value="<?=date("Y-m-1",strtotime("- $i month"))?>"><?=date("F Y",strtotime("- $i month"))?></option>
+          <?endfor?>
+        </select>
+      </fieldset>
+    </form>
+
+    <div class='graph_wrapper'>
+      <div class='chart' id="overall-visits-data-graph"></div>
+      <?=partial("_table",array("visit_data"=>$visit_data,"date"=>$date))?>
+    </div>
+
+  </div>
+<?endif?>
+</div>

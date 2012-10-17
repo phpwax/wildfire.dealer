@@ -1,0 +1,11 @@
+.filters-analytics{
+  margin:10px 0;
+}
+.filters-analytics span{
+  font-weight:bold;
+  color:white;
+}
+.filters-analytics select{
+  display:inline;
+  width:auto;
+}

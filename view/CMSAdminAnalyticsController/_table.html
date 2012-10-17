@@ -1,0 +1,36 @@
+<?
+  $filter_month = $date?date("F",strtotime($date)):date("F");
+?>
+<table class='traffic-data data_table' id="visits-data">
+  <thead>
+    <tr>
+      <th>Dealer</th>
+      <th>Visits in <?=$filter_month?></th>
+      <th>PageViews in <?=$filter_month?></th>
+      <th>Link</th>
+    </tr>
+  </thead>
+  <tbody>
+  <?foreach($visit_data as $d=>$info):?>
+    <?
+      $dealer = $info["dealer"];
+      $analytics_data = $info["data"];
+      $domain = "";
+      if(($domains = $dealer->domains) && $domains->count()){
+        foreach($domains as $dom){
+          if($dom->is_primary) $domain = $dom->webaddress;
+        }
+        if(!$domain && ($domain_current = $domains[0])) $domain = $domain_current->webaddress;
+      }
+    ?>
+    <tr class='<?=$dealer->client_id?>'>
+      <td><?=$dealer->title?></td>
+      <?foreach($analytics_data as $data):?>
+      <td><?=$data["ga:visits"]?></td>
+      <td><?=$data["ga:pageviews"]?></td>
+      <?endforeach?>
+      <td><?if($domain):?><a href="http://<?=$domain?>/" target="_blank"><?=$domain?></a><?endif?></td>
+    </tr>
+  <?endforeach?>
+  </tbody>
+</table>
