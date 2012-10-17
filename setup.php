@@ -4,7 +4,8 @@ CMSApplication::register_module("dealer", array("display_name"=>"Dealers", "link
 CMSApplication::register_module("domain", array("display_name"=>"Dealer Domains", "link"=>"/admin/domain/", 'split'=>true));
 CMSApplication::register_module("testdrive", array("display_name"=>"Test Drive Requests", "link"=>"/admin/testdrive/", 'split'=>true));
 CMSApplication::register_module("brochure", array("display_name"=>"Brochure Requests", "link"=>"/admin/brochure/", 'split'=>true));
-CMSApplication::register_module("tracking", array("display_name"=>"Tracking", "link"=>"/admin/tracking/", 'split'=>true));
+CMSApplication::register_module("tracking", array("display_name"=>"Tracking", "link"=>"/admin/tracking/"));
+CMSApplication::register_module("analytics", array("display_name"=>"Analytics", 'plugin_name'=>'wildfire.dealer', 'assets_for_cms'=>true, "link"=>"/admin/analytics/", 'split'=>true));
 
 
 if(!defined("CONTENT_MODEL")){
