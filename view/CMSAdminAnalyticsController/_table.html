@@ -4,6 +4,7 @@
 <table class='traffic-data data_table' id="visits-data">
   <thead>
     <tr>
+      <th></th>
       <th>Dealer</th>
       <th>Visits in <?=$filter_month?></th>
       <th>PageViews in <?=$filter_month?></th>
@@ -11,6 +12,7 @@
     </tr>
   </thead>
   <tbody>
+  <?$counter = 1?>
   <?foreach($visit_data as $d=>$info):?>
     <?
       $dealer = $info["dealer"];
@@ -24,6 +26,7 @@
       }
     ?>
     <tr class='<?=$dealer->client_id?>'>
+      <td><?=$counter++?></td>
       <td><?=$dealer->title?></td>
       <?foreach($analytics_data as $data):?>
       <td><?=$data["ga:visits"]?></td>
