@@ -1,0 +1,1 @@
+<?=partial("_table",array("visit_data"=>$visit_data,"date"=>$date),"html")?>
