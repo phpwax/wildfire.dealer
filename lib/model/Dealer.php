@@ -45,6 +45,9 @@ class Dealer extends VehicleBaseModel{
     $this->define("analytics_tracker_id", "CharField", array('group'=>'advanced'));
     $this->define("analytics_id", "CharField", array('group'=>'advanced'));
     $this->define("autotrader_id", "CharField", array('group'=>'advanced'));
+
+    $this->define("ebay_appid", "CharField", array('group'=>'advanced'));
+    $this->define("ebay_auth_token", "TextField", array('group'=>'advanced'));
   }
 
   public function before_save(){
