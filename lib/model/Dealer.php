@@ -46,6 +46,7 @@ class Dealer extends VehicleBaseModel{
     $this->define("analytics_id", "CharField", array('group'=>'advanced'));
     $this->define("autotrader_id", "CharField", array('group'=>'advanced'));
 
+    $this->define("ebay_system", "CharField", array('group'=>'advanced', 'widget'=>'SelectInput', 'choices'=>array("sandbox"=>"sandbox","production"=>"production")));
     $this->define("ebay_appid", "CharField", array('group'=>'advanced'));
     $this->define("ebay_auth_token", "TextField", array('group'=>'advanced'));
   }
