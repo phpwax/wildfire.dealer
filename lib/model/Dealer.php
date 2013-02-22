@@ -38,7 +38,7 @@ class Dealer extends VehicleBaseModel{
     $this->define("website", "CharField", array('editable'=>false));
     $this->define("api_status", "BooleanField", array('editable'=>false));
     $this->define("domains", "ManyToManyField", array('target_model'=>'Domain', 'group'=>'relationships'));
-    $this->define("parent_dealership", "ForeignKey", array('target_model'=>'Dealer', 'group'=>'advanced'));
+    $this->define("parent_dealership", "ForeignKey", array('target_model'=>'Dealer', 'group'=>'advanced',"col_name"=>"dealer_id"));
     $this->define("child_dealerships", "HasManyField", array('target_model'=>'Dealer',"join_field"=>"dealer_id"));
     
 
