@@ -40,6 +40,7 @@ class Dealer extends VehicleBaseModel{
     $this->define("domains", "ManyToManyField", array('target_model'=>'Domain', 'group'=>'relationships'));
     $this->define("parent_dealership", "ForeignKey", array('target_model'=>'Dealer', 'group'=>'advanced',"col_name"=>"dealer_id"));
     $this->define("child_dealerships", "HasManyField", array('target_model'=>'Dealer',"join_field"=>"dealer_id"));
+    $this->define("dealer_services", "HasManyField", array('target_model'=>'DealerService'));
     
 
     if(constant("CONTENT_MODEL")) $this->define("pages", "ManyToManyField", array('target_model'=>CONTENT_MODEL, 'group'=>'relationships'));
@@ -48,6 +49,7 @@ class Dealer extends VehicleBaseModel{
     $this->define("analytics_tracker_id", "CharField", array('group'=>'advanced'));
     $this->define("analytics_id", "CharField", array('group'=>'advanced'));
     $this->define("autotrader_id", "CharField", array('group'=>'advanced'));
+    $this->define("live_chat_code", "TextField", array('group'=>'advanced'));
   }
 
   public function before_save(){
