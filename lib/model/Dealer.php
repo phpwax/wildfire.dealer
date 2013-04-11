@@ -186,7 +186,10 @@ class Dealer extends VehicleBaseModel{
   }
   
   public function has_service($key, $level=false) {
-    
+    foreach($this->dealer_services as $serv) {
+      if($serv->key == $key && $serv->is_valid()) return true;
+    }
+    return false;
   }
 
 
