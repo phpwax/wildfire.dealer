@@ -184,9 +184,12 @@ class Dealer extends VehicleBaseModel{
     }
     return array("subs"=>$subs, "extras"=>$extras);
   }
+  
+  public function has_service($key, $level=false) {
+    
+  }
 
 
 
 }
 
-?>

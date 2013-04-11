@@ -14,6 +14,11 @@ class DealerService extends WaxModel {
     
   }
   
+  public function is_valid() {
+    if(($this->status > 0) && (strtotime($this->valid_from) < time()) && strtotime($this->valid_to) > time()) return true;
+    return false;
+  }
+  
   
   
   
