@@ -67,7 +67,6 @@ class LocalDealerController extends CMSApplicationController{
           WaxEvent::run("cms.content.lookup", $obj);
         }
       }
-
     });
   }
 
