@@ -63,12 +63,13 @@ class Dealer extends VehicleBaseModel{
 
   //make a new cms user for the dealership
   public function user_creation(){
+    $dealer_class = get_class($this);
     $user = new WildfireUser;
     if($this->client_id && (!$found = $user->filter("username", $this->client_id)->first())){
       $user_attrs = array('username'=>$this->client_id, 'firstname'=>$this->title, 'password'=>$this->client_id.date("Y"));
       $this->wu = $user = $user->update_attributes($user_attrs);
 
-      $allowed_modules = Dealer::$allowed_modules;
+      $allowed_modules = $dealer_class::$allowed_modules;
       foreach(CMSApplication::get_modules() as $name=>$info){
         //if the module isnt listed at all, then block access to it
         if(!$allowed_modules[$name]){
@@ -113,8 +114,7 @@ class Dealer extends VehicleBaseModel{
         $block->update_attributes(array($user->table."_id"=>$user->primval, 'class'=>CONTENT_MODEL, 'operation'=>"tree", "value"=>$page->primval));
       }
 
-      $class = get_class($this);
-      WaxEvent::run($class.".user_creation", $this);
+      WaxEvent::run($dealer_class.".user_creation", $this);
     }
 
   }
@@ -122,19 +122,20 @@ class Dealer extends VehicleBaseModel{
   //create the dealer section in the cms
   public function dealer_creation(){
     $class = CONTENT_MODEL;
+    $dealer_class = get_class($this);
     $model = new $class("live");
-    $url = Dealer::$dealer_section.Inflections::to_url($this->title)."/";
+    $url = $dealer_class::$dealer_section.Inflections::to_url($this->title)."/";
     if(($pages = $this->pages) && $pages->count() || $model->filter("permalink", $url)->first()) return true;
     else{
       //find dealers section
 
-      if($dealers = $model->filter("permalink", Dealer::$dealer_section)->first()){
+      if($dealers = $model->filter("permalink", $dealer_class::$dealer_section)->first()){
         $model = $model->clear();
         //create the first level of this dealer
         $dealer_data = array(
           'title'=>$this->title,
           'layout'=>'dealer',
-          'page_type'=>Dealer::$dealer_homepage_partial,
+          'page_type'=>$dealer_class::$dealer_homepage_partial,
           'content'=>$this->content,
           'parent_id'=>$dealers->primval
         );
@@ -147,7 +148,7 @@ class Dealer extends VehicleBaseModel{
           $subs = array();
           //copy the national main pages
           $i=0;
-          foreach(Dealer::$dealer_top_pages as $title=>$skel){
+          foreach($dealer_class::$dealer_top_pages as $title=>$skel){
             $look = new $class("live");
             if($found = $look->filter("permalink", $skel)->first()){
               $info = $found->row;
@@ -166,7 +167,7 @@ class Dealer extends VehicleBaseModel{
               $i++;
             }
           }
-          foreach(Dealer::$dealer_extra_pages as $info){
+          foreach($dealer_class::$dealer_extra_pages as $info){
             $pg = new $class;
             $info['parent_id'] = $saved->primval;
             $info['date_start'] = date("Y-m-d", strtotime("now-1 day"));
