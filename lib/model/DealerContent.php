@@ -2,6 +2,7 @@
 class DealerContent extends WildfireContent{
   public $table = "wildfire_content";
   public static $page_types = array('test');
+  public $national_content_flag = false;
   public function setup(){
     parent::setup();
 
