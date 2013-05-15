@@ -85,6 +85,25 @@ class DealerContent extends WildfireContent{
     return false;
   }
 
+  /**
+   * same as wildfirecontent, but doesn't move children that are actually national content items
+   */
+  public function children_move(){
+    if($id = $this->revision()){
+      $class = get_class($this);
+      $model = new $class($id);
+      $model->row['dealer_content_id'] = false; //need this addition to not reparent national content to dealer
+      WaxLog::log('error', "[move] $id - $class", 'children_move');
+      if($model && $model->primval){
+        foreach($model->children as $c){
+          $model->children->unlink($c);
+          $c->update_attributes(array($this->parent_column."_".$this->primary_key => $this->primval));
+        }
+      }
+    }
+    return $this;
+  }
+
   //need to overwrite path_to/from_root to handle the national_content children pointer for content ancestry
   public function path_to_root($dealer){
     if(!$dealer) return parent::path_to_root();
