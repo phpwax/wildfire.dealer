@@ -1,0 +1,20 @@
+{
+    "name": "phpwax/wildfire.dealer",
+    "description": "Wildfire CMS Plugin for Dealers",
+    "require": {
+        "php": ">=5.3"
+    },
+    "authors": [
+        {
+            "name": "One Black Bear",
+            "email": "dev@oneblackbear.com"
+        }
+    ],
+    "autoload": {
+      "classmap": [
+        "lib/", "resources/"
+      ],
+      "files": ["ini.php"]
+    }
+
+}
