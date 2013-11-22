@@ -15,6 +15,11 @@
         "lib/", "resources/"
       ],
       "files": ["ini.php"]
+    },
+    "extra": {
+      "branch-alias": {
+        "dev-master": "1.0.x-dev"
+      }
     }
 
 }
