@@ -41,14 +41,18 @@ WaxEvent::add("cms.save.after", function(){
   }
 });
 
-WaxEvent::add("cms.layout.sublinks", function(){
-  $obj = WaxEvent::data();
-  if($obj->module_name =="home" || $obj->module_name =="content") {
-    $obj->quick_links = array();
-  }
+WaxEvent::add("wax.action", function(){
+  WaxEvent::add("cms.layout.sublinks", function(){
+    $obj = WaxEvent::data();
+    if($obj->module_name =="home") {
+      $obj->quick_links = array();
+    } elseif($obj->current_user) {
+      $can = $obj->current_user->restricted_tree($obj->model_class);
+      if($can) {
+        $obj->quick_links = array("create new ".$obj->module_name=>'/admin/'.$obj->module_name."/create/?wildfire_content[parent_id]=".$can[0]);
+      }
+    }
+
+  });
+
 });
-
-
-
-
-
