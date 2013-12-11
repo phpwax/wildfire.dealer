@@ -43,7 +43,7 @@ WaxEvent::add("cms.save.after", function(){
 
 WaxEvent::add("cms.layout.sublinks", function(){
   $obj = WaxEvent::data();
-  if($obj->tree_layout) {
+  if($obj->module_name =="home" || $obj->module_name =="content") {
     $obj->quick_links = array();
   }
 });
