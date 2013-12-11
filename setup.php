@@ -41,4 +41,14 @@ WaxEvent::add("cms.save.after", function(){
   }
 });
 
-?>
+WaxEvent::add("cms.layout.sublinks", function(){
+  $obj = WaxEvent::data();
+  if($obj->tree_layout) {
+    $obj->quick_links = array();
+  }
+});
+
+
+
+
+
