@@ -7,7 +7,7 @@ class TestDriveRequest extends WaxModel{
     $this->define("last_name", "CharField", array("required"=>1, 'scaffold'=>true, 'export'=>true));
     $this->define("postcode", "CharField", array("required"=>1, 'scaffold'=>true, 'export'=>true));
     $this->define("address", "TextField", array('export'=>true, 'required'=>true));
-    $this->define("email_address", "CharField", array("required"=>1, 'export'=>true));
+    $this->define("email_address", "EmailField", array("required"=>1, 'export'=>true));
     $this->define("telephone_number", "CharField", array("required"=>1, 'export'=>true));
 
     $this->define("purchase_estimation", "CharField", array("label"=>"I am thinking of purchasing my next vehicle in:", 'export'=>true));
