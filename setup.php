@@ -6,6 +6,8 @@ CMSApplication::register_module("testdrive", array("display_name"=>"Test Drive R
 CMSApplication::register_module("brochure", array("display_name"=>"Brochure Requests", "link"=>"/admin/brochure/", 'split'=>true));
 CMSApplication::register_module("tracking", array("display_name"=>"Tracking", "link"=>"/admin/tracking/", 'split'=>true));
 
+AutoLoader::register_controller_path("plugin", __DIR__."/lib/controller/");
+AutoLoader::register_controller_path("plugin", __DIR__."/resources/app/controller/");
 
 if(!defined("CONTENT_MODEL")){
   $con = new ApplicationController(false, false);
