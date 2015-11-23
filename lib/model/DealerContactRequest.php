@@ -7,7 +7,7 @@ class DealerContactRequest extends WaxModel{
     $this->define("email_address", "EmailField", array('required'=>true));
     $this->define("telephone", "CharField");
     $this->define("message", "TextField");
-    $this->define("dealership", "ForeignKey", array('target_model'=>'Dealer', 'widget'=>'HiddenInput'));
+    $this->define("dealer", "ForeignKey", array('target_model'=>'Dealer', 'widget'=>'HiddenInput'));
     //analytics tracking of urls
     $this->define("utm_source", "CharField", array('widget'=>'HiddenInput'));
     $this->define("utm_campaign", "CharField", array('widget'=>'HiddenInput'));
