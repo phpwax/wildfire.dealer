@@ -25,6 +25,15 @@ class LocalDealerController extends CMSApplicationController{
           ($page = $page->scope("live")->first()) ){
 
           $dealer_lookup = $page;
+
+          //check for primary domain - redirect if needed
+          if(!$found->is_primary && ($primary = $dealer->domains->filter('is_primary',1)->first())){
+            $obj->redirect_to("http://".$primary->webaddress . $_SERVER['REQUEST_URI']);
+          }
+
+        //if no domain redirect to homepage
+        } else {
+          $obj->redirect_to("http://mg.co.uk" . $_SERVER['REQUEST_URI']);
         }
       }
       if(!$dealer_lookup){
