@@ -28,12 +28,12 @@ class LocalDealerController extends CMSApplicationController{
 
           //check for primary domain - redirect if needed
           if(!$found->is_primary && ($primary = $dealer->domains->filter('is_primary',1)->first())){
-            $obj->redirect_to("http://".$primary->webaddress . $_SERVER['REQUEST_URI']);
+            $obj->redirect_to("http://".$primary->webaddress . $_SERVER['REQUEST_URI'], false, 301);
           }
 
         //if no domain redirect to homepage
         } else {
-          $obj->redirect_to("http://mg.co.uk" . $_SERVER['REQUEST_URI']);
+          $obj->redirect_to("http://mg.co.uk" . $_SERVER['REQUEST_URI'], false, 301);
         }
       }
       if(!$dealer_lookup){
