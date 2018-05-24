@@ -12,7 +12,14 @@ class DealerContactRequest extends WaxModel{
     $this->define("utm_source", "CharField", array('widget'=>'HiddenInput'));
     $this->define("utm_campaign", "CharField", array('widget'=>'HiddenInput'));
     $this->define("utm_medium", "CharField", array('widget'=>'HiddenInput'));
+
+    $this->define("page_completed_on", "CharField", array("widget"=>'HiddenInput'));
     parent::setup();
+  }
+
+  public function before_save()
+  {
+    if(!$this->page_completed_on) $this->page_completed_on = date("Y-m-d H:i:s");
   }
 }
 ?>
