@@ -14,12 +14,13 @@ class DealerContactRequest extends WaxModel{
     $this->define("utm_medium", "CharField", array('widget'=>'HiddenInput'));
 
     $this->define("page_completed_on", "CharField", array("widget"=>'HiddenInput'));
+    $this->define("date_created", "DateTimeField", array("widget"=>'HiddenInput','export'=>true));
     parent::setup();
   }
 
   public function before_save()
   {
-    if(!$this->page_completed_on) $this->page_completed_on = date("Y-m-d H:i:s");
+    if(!$this->date_created) $this->date_created = date("Y-m-d H:i:s");
   }
 }
 ?>
