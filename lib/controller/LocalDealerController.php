@@ -21,7 +21,7 @@ class LocalDealerController extends CMSApplicationController{
         $dclass = $obj->domain_class;
         $domain = new $dclass;
         if(($found = $domain->filter("webaddress", $server)->filter("status", 1)->first()) && ($dealer = $found->dealers) &&
-          ($dealer = $dealer->first()) && ($page = $dealer->pages) &&
+          ($dealer = $dealer->scope('live')->first()) && ($page = $dealer->pages) &&
           ($page = $page->scope("live")->first()) ){
 
           $dealer_lookup = $page;
